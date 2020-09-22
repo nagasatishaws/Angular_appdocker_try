@@ -1,19 +1,12 @@
 # Stage 1
-FROM node:8.11.2-alpine as node
-
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
+FROM node:10-alpine as build-step
+RUN mkdir -p /app
+WORKDIR /app
+COPY package.json /app
 RUN npm install
-
-COPY . .
-
-RUN npm run build
+COPY . /app
+RUN npm run build --prod
 
 # Stage 2
-FROM nginx:1.13.12-alpine
-
-COPY --from=node /usr/src/app/dist/angular-docker /usr/share/nginx/html
-
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+FROM nginx:1.17.1-alpine
+COPY --from=build-step /app/dist/angular-docker /usr/share/nginx/html
