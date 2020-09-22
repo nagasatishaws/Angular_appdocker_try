@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json /appp
 RUN npm install
 COPY . /appp
-RUN npm run build --prod
+RUN npm run build 
 
 # Stage 2
 FROM nginx:1.17.1-alpine
